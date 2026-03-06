@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DREAM LOCATION — Marrakech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,600&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --noir:#080808;--noir2:#0f0f0f;--noir3:#161616;
+  --or:#c9a84c;--or2:#e8c878;--or3:#a87c30;
+  --rouge:#e63d2f;
+  --blanc:#f4f0e8;--blanc2:#d8d0c0;
+  --texte:#8a8070;
+  --vert:#2ecc71;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--noir);color:var(--blanc);font-family:'Outfit',sans-serif;font-weight:300;overflow-x:hidden;cursor:none;}
+
+/* ── CURSEUR ── */
+.cur{width:6px;height:6px;background:var(--or);border-radius:50%;position:fixed;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;}
+.cur-r{width:32px;height:32px;border:1px solid rgba(201,168,76,.5);border-radius:50%;position:fixed;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:width .3s,height .3s,border-color .3s;}
+body:hover .cur{opacity:1;}
+
+/* ══════════════════════════════════════
+   INTRO CINÉMATIQUE
+══════════════════════════════════════ */
+#intro{
+  position:fixed;inset:0;z-index:9000;
+  background:var(--noir);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.intro-bg-lines{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(201,168,76,.06) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(201,168,76,.06) 1px,transparent 1px);
+  background-size:60px 60px;
+  animation:gridPulse 1s ease forwards;
+  opacity:0;
+}
+@keyframes gridPulse{0%{opacity:0}50%{opacity:1}100%{opacity:0}}
+
+.intro-split{
+  position:absolute;inset:0;
+  display:grid;grid-template-columns:1fr 1fr;
+}
+.split-l,.split-r{
+  background:var(--noir);
+  transition:transform 1.2s cubic-bezier(.77,0,.18,1);
+}
+.split-l{transform-origin:left;}
+.split-r{transform-origin:right;}
+.intro.open .split-l{transform:translateX(-100%);}
+.intro.open .split-r{transform:translateX(100%);}
+
+.intro-logo-wrap{
+  position:relative;z-index:2;
+  text-align:center;
+  opacity:0;
+  animation:logoIn .8s ease .3s forwards;
+}
+@keyframes logoIn{
+  from{opacity:0;transform:scale(.7) translateY(20px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+.intro-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(60px,12vw,160px);
+  letter-spacing:.12em;
+  line-height:1;
+  background:linear-gradient(135deg,#a87c30 0%,#e8c878 40%,#c9a84c 60%,#a87c30 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  filter:drop-shadow(0 0 40px rgba(201,168,76,.3));
+}
+.intro-sub{
+  font-size:clamp(10px,1.5vw,14px);
+  letter-spacing:.5em;
+  text-transform:uppercase;
+  color:var(--or);
+  margin-top:10px;
+  opacity:0;
+  animation:fadeIn .6s ease .8s forwards;
+}
+.intro-location{
+  font-size:11px;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:var(--texte);
+  margin-top:6px;
+  opacity:0;
+  animation:fadeIn .6s ease 1s forwards;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.intro-bar{
+  position:absolute;bottom:60px;left:50%;transform:translateX(-50%);
+  width:200px;height:1px;background:rgba(255,255,255,.1);
+  overflow:hidden;
+  opacity:0;
+  animation:fadeIn .4s ease 1s forwards;
+}
+.intro-bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,transparent,var(--or),transparent);
+  width:0;
+  animation:barFill 1.5s ease .9s forwards;
+}
+@keyframes barFill{to{width:100%;}}
+.intro-pct{
+  position:absolute;bottom:75px;left:50%;transform:translateX(-50%);
+  font-size:10px;letter-spacing:.3em;color:var(--or);
+  opacity:0;animation:fadeIn .4s ease 1s forwards;
+}
+
+/* PARTICULES intro */
+.particle{
+  position:absolute;width:2px;height:2px;border-radius:50%;
+  background:var(--or);opacity:0;
+  animation:particle 2s ease forwards;
+}
+@keyframes particle{
+  0%{opacity:0;transform:translate(0,0) scale(0);}
+  20%{opacity:.8;}
+  100%{opacity:0;transform:var(--tx,translate(100px,-200px)) scale(0);}
+}
+
+/* ══════════════════════════════════════
+   NAV
+══════════════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:24px 48px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all .4s;
+}
+nav.scrolled{
+  background:rgba(8,8,8,.97);
+  backdrop-filter:blur(20px);
+  padding:16px 48px;
+  border-bottom:1px solid rgba(201,168,76,.12);
+}
+.logo-nav{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:26px;letter-spacing:.2em;
+  background:linear-gradient(135deg,var(--or3),var(--or2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a{
+  text-decoration:none;color:var(--texte);
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:400;
+  transition:color .3s;position:relative;
+}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--or);transition:width .3s;}
+.nav-links a:hover{color:var(--or);}
+.nav-links a:hover::after{width:100%;}
+.nav-snap{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(201,168,76,.1);
+  border:1px solid rgba(201,168,76,.25);
+  padding:9px 20px;
+  color:var(--or);
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;
+  cursor:none;transition:all .3s;text-decoration:none;
+}
+.nav-snap:hover{background:var(--or);color:var(--noir);}
+.snap-icon{font-size:14px;}
+
+/* ══════════════════════════════════════
+   HERO
+══════════════════════════════════════ */
+#hero{
+  height:100vh;min-height:700px;
+  position:relative;display:flex;align-items:center;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 70% at 60% 55%,rgba(201,168,76,.05) 0%,transparent 65%),
+    radial-gradient(ellipse 40% 40% at 10% 80%,rgba(201,168,76,.04) 0%,transparent 60%),
+    var(--noir);
+}
+.hero-grid-bg{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(201,168,76,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(201,168,76,.035) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 55% 60% at 55% 50%,black 20%,transparent 80%);
+}
+.hero-maroc{
+  position:absolute;right:0;top:0;bottom:0;width:55%;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.maroc-glow{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 55%,rgba(201,168,76,.08) 0%,transparent 70%);
+}
+
+/* CAR HERO SVG - Brabus */
+.hero-car-svg{
+  width:90%;max-width:780px;
+  filter:drop-shadow(0 20px 60px rgba(201,168,76,.15));
+  animation:floatCar 4s ease-in-out infinite;
+}
+@keyframes floatCar{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+
+.hero-content{
+  position:relative;z-index:2;padding:0 48px;max-width:620px;
+}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1px solid rgba(201,168,76,.3);
+  padding:6px 16px;
+  font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--or);
+  margin-bottom:24px;
+  animation:fadeUp .8s ease .2s both;
+}
+.pill-dot{width:6px;height:6px;border-radius:50%;background:var(--or);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(56px,8vw,110px);
+  line-height:.95;letter-spacing:.04em;
+  margin-bottom:20px;
+  animation:fadeUp .9s ease .4s both;
+}
+h1 .gold{
+  background:linear-gradient(135deg,var(--or3) 0%,var(--or2) 50%,var(--or3) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-desc{
+  font-size:14px;line-height:1.85;color:var(--texte);
+  max-width:420px;margin-bottom:36px;
+  animation:fadeUp .9s ease .6s both;
+}
+.hero-actions{
+  display:flex;gap:14px;align-items:center;
+  animation:fadeUp .9s ease .8s both;
+}
+.btn-main{
+  background:linear-gradient(135deg,var(--or3),var(--or));
+  color:var(--noir);padding:14px 36px;
+  font-size:10px;letter-spacing:.25em;text-transform:uppercase;font-weight:700;
+  font-family:'Outfit',sans-serif;border:none;cursor:none;
+  transition:all .3s;position:relative;overflow:hidden;
+}
+.btn-main::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--or),var(--or2));
+  opacity:0;transition:opacity .3s;
+}
+.btn-main:hover::before{opacity:1;}
+.btn-snap{
+  display:flex;align-items:center;gap:10px;
+  border:1px solid rgba(255,255,255,.15);
+  color:var(--blanc2);padding:14px 28px;
+  font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  font-family:'Outfit',sans-serif;background:transparent;cursor:none;
+  transition:all .3s;text-decoration:none;
+}
+.btn-snap:hover{border-color:var(--or);color:var(--or);}
+
+.hero-stats{
+  position:absolute;bottom:48px;left:48px;
+  display:flex;gap:44px;
+  animation:fadeUp .9s ease 1s both;
+}
+.st-num{
+  font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:.05em;
+  background:linear-gradient(135deg,var(--or3),var(--or2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.st-lab{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--texte);margin-top:2px;}
+
+.scroll-hint{
+  position:absolute;bottom:48px;right:48px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  animation:fadeUp .9s ease 1.2s both;
+}
+.scroll-hint span{font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--texte);}
+.scroll-line{width:1px;height:60px;background:linear-gradient(to bottom,transparent,var(--or),transparent);animation:scrollLine 2s ease-in-out infinite;}
+@keyframes scrollLine{0%,100%{opacity:.3;transform:scaleY(.5);}50%{opacity:1;transform:scaleY(1);}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══════════════════════════════════════
+   FILTER TABS
+══════════════════════════════════════ */
+.filter-section{
+  background:var(--noir2);
+  border-top:1px solid rgba(201,168,76,.1);
+  border-bottom:1px solid rgba(201,168,76,.1);
+  padding:28px 48px;
+  position:sticky;top:60px;z-index:100;
+}
+.filter-wrap{
+  display:flex;align-items:center;gap:8px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.filter-wrap::-webkit-scrollbar{display:none;}
+.f-tab{
+  flex-shrink:0;
+  padding:9px 22px;
+  font-size:9px;letter-spacing:.25em;text-transform:uppercase;font-weight:500;
+  border:1px solid rgba(255,255,255,.1);
+  color:var(--texte);background:transparent;cursor:none;
+  transition:all .25s;font-family:'Outfit',sans-serif;
+}
+.f-tab.active,.f-tab:hover{
+  background:var(--or);color:var(--noir);border-color:var(--or);
+}
+
+/* ══════════════════════════════════════
+   FLOTTE GRID
+══════════════════════════════════════ */
+#flotte{padding:80px 48px;}
+.section-head{margin-bottom:52px;}
+.s-tag{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--or);
+  margin-bottom:12px;
+}
+.s-tag::before{content:'';width:28px;height:1px;background:var(--or);}
+h2{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(38px,5vw,72px);
+  letter-spacing:.06em;line-height:1;
+}
+h2 .gold{
+  background:linear-gradient(135deg,var(--or3),var(--or2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+.vehicles-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:2px;
+}
+.v-card{
+  background:var(--noir2);
+  position:relative;overflow:hidden;cursor:none;
+  border:1px solid rgba(255,255,255,.04);
+  transition:transform .35s ease,border-color .35s;
+}
+.v-card:hover{transform:translateY(-5px);border-color:rgba(201,168,76,.2);}
+.v-card.big{grid-column:span 2;}
+
+.v-badge{
+  position:absolute;top:14px;left:14px;z-index:3;
+  padding:4px 12px;
+  font-size:8px;letter-spacing:.25em;text-transform:uppercase;font-weight:600;
+}
+.badge-new{background:var(--or);color:var(--noir);}
+.badge-hot{background:var(--rouge);color:#fff;}
+.badge-moto{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.4);color:var(--or);}
+
+.v-img{
+  padding:28px 24px 16px;
+  background:linear-gradient(135deg,#0f0f0f 0%,#1a1a1a 100%);
+  min-height:160px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.v-card.big .v-img{min-height:220px;}
+.v-img::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 60%,rgba(201,168,76,.04) 0%,transparent 70%);
+  opacity:0;transition:opacity .3s;
+}
+.v-card:hover .v-img::before{opacity:1;}
+.v-img svg,.v-img img{width:88%;max-width:260px;transition:transform .4s ease;}
+.v-card.big .v-img svg{max-width:360px;}
+.v-card:hover .v-img svg{transform:scale(1.04);}
+
+.v-body{padding:18px 20px 20px;}
+.v-cat{font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:var(--or3);margin-bottom:5px;}
+.v-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:600;color:var(--blanc);margin-bottom:2px;
+}
+.v-card.big .v-name{font-size:28px;}
+.v-model{font-size:11px;color:var(--texte);margin-bottom:12px;}
+.v-specs{
+  display:flex;flex-wrap:wrap;gap:10px;
+  padding-bottom:12px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  margin-bottom:12px;
+}
+.v-spec{
+  display:flex;align-items:center;gap:5px;
+  font-size:10px;color:var(--texte);
+}
+.sp-dot{width:3px;height:3px;border-radius:50%;background:var(--or);opacity:.7;}
+.v-foot{display:flex;justify-content:space-between;align-items:center;}
+.v-price{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;letter-spacing:.04em;
+  background:linear-gradient(135deg,var(--or3),var(--or2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1;
+}
+.v-price sub{font-size:11px;color:var(--texte);font-family:'Outfit';font-weight:300;letter-spacing:.05em;-webkit-text-fill-color:var(--texte);}
+.v-book{
+  padding:9px 18px;
+  background:transparent;border:1px solid rgba(201,168,76,.3);
+  color:var(--or);font-size:8px;letter-spacing:.25em;text-transform:uppercase;
+  font-family:'Outfit',sans-serif;font-weight:500;cursor:none;
+  transition:all .25s;
+}
+.v-book:hover{background:var(--or);color:var(--noir);border-color:var(--or);}
+
+/* ══════════════════════════════════════
+   CONTACT SNAP
+══════════════════════════════════════ */
+#contact{
+  padding:100px 48px;
+  background:var(--noir2);
+  position:relative;overflow:hidden;
+}
+#contact::before{
+  content:'';position:absolute;
+  top:-200px;right:-200px;
+  width:600px;height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.06) 0%,transparent 70%);
+}
+.contact-inner{
+  max-width:700px;margin:0 auto;text-align:center;
+  position:relative;z-index:2;
+}
+.snap-card{
+  margin-top:52px;
+  border:1px solid rgba(201,168,76,.2);
+  padding:48px;
+  position:relative;
+  background:rgba(201,168,76,.02);
+}
+.snap-card::before{
+  content:'';position:absolute;
+  top:-1px;left:50%;transform:translateX(-50%);
+  width:80px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--or),transparent);
+}
+.snap-logo{
+  font-size:48px;margin-bottom:16px;
+  animation:snapPulse 2s ease-in-out infinite;
+}
+@keyframes snapPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+.snap-handle{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(36px,6vw,64px);
+  letter-spacing:.1em;
+  background:linear-gradient(135deg,#FFFC00,#FF9900,#FF0090,#9B00FF);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:14px;
+}
+.snap-desc{font-size:13px;color:var(--texte);line-height:1.8;margin-bottom:32px;}
+.snap-btn{
+  display:inline-flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,#FFFC00,#FF9900);
+  color:#000;
+  padding:16px 40px;
+  font-size:11px;letter-spacing:.25em;text-transform:uppercase;font-weight:700;
+  font-family:'Outfit',sans-serif;border:none;cursor:none;
+  transition:all .3s;text-decoration:none;
+}
+.snap-btn:hover{transform:scale(1.04);box-shadow:0 10px 40px rgba(255,200,0,.3);}
+.contact-alts{
+  display:flex;justify-content:center;gap:32px;
+  margin-top:36px;
+}
+.alt-contact{
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;color:var(--texte);letter-spacing:.05em;
+}
+.alt-icon{font-size:16px;}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer{
+  background:var(--noir);
+  border-top:1px solid rgba(201,168,76,.1);
+  padding:48px 48px 28px;
+}
+.footer-row{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:32px;
+}
+.footer-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.2em;
+  background:linear-gradient(135deg,var(--or3),var(--or2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.footer-links{display:flex;gap:28px;}
+.footer-links a{text-decoration:none;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--texte);transition:color .3s;}
+.footer-links a:hover{color:var(--or);}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,.05);
+  padding-top:20px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.footer-bottom p{font-size:10px;color:var(--texte);letter-spacing:.08em;}
+.marrakech-tag{
+  display:flex;align-items:center;gap:8px;
+  font-size:10px;color:var(--or);letter-spacing:.15em;
+}
+
+/* ══════════════════════════════════════
+   REVEAL
+══════════════════════════════════════ */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .75s ease,transform .75s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:900px){
+  .vehicles-grid{grid-template-columns:repeat(2,1fr);}
+  .v-card.big{grid-column:span 2;}
+  nav{padding:18px 24px;}
+  nav.scrolled{padding:12px 24px;}
+  .nav-links{display:none;}
+  section,#flotte,#contact{padding-left:24px;padding-right:24px;}
+  .hero-content{padding:0 24px;}
+  .hero-stats{left:24px;}
+  .filter-section{padding:20px 24px;}
+  .hero-maroc{display:none;}
+  footer{padding:40px 24px 20px;}
+}
+@media(max-width:540px){
+  .vehicles-grid{grid-template-columns:1fr;}
+  .v-card.big{grid-column:span 1;}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSEUR -->
+<div class="cur" id="cur"></div>
+<div class="cur-r" id="curR"></div>
+
+<!-- ═══════════ INTRO ═══════════ -->
+<div id="intro">
+  <div class="intro-bg-lines"></div>
+  <div class="intro-split">
+    <div class="split-l"></div>
+    <div class="split-r"></div>
+  </div>
+  <div class="intro-logo-wrap">
+    <div class="intro-logo">DREAM<br>LOCATION</div>
+    <div class="intro-sub">Marrakech · Maroc</div>
+    <div class="intro-location">📍 Location de Véhicules Premium</div>
+  </div>
+  <div class="intro-pct" id="introPct">0%</div>
+  <div class="intro-bar"><div class="intro-bar-fill"></div></div>
+</div>
+
+<!-- ═══════════ NAV ═══════════ -->
+<nav id="nav">
+  <div class="logo-nav">DREAM LOCATION</div>
+  <ul class="nav-links">
+    <li><a href="#flotte">Flotte</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#flotte">Tarifs</a></li>
+  </ul>
+  <a href="https://snapchat.com/add/numero.onee" target="_blank" class="nav-snap">
+    <span class="snap-icon">👻</span> numero.onee
+  </a>
+</nav>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-bg"></div>
+
+  <div class="hero-maroc">
+    <div class="maroc-glow"></div>
+    <!-- BRABUS SVG -->
+    <svg class="hero-car-svg" viewBox="0 0 800 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="400" cy="340" rx="310" ry="15" fill="rgba(0,0,0,0.7)"/>
+      <!-- Corps principal -->
+      <path d="M80 285 L95 225 L180 158 L280 128 L400 120 L530 124 L640 148 L720 200 L750 248 L755 285 Z" fill="#141414" stroke="rgba(201,168,76,0.35)" stroke-width="1.2"/>
+      <!-- Toit -->
+      <path d="M160 242 L195 165 L310 132 L470 128 L590 138 L670 175 L695 240 Z" fill="#0f0f0f" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <!-- Vitre av -->
+      <path d="M200 238 L218 168 L330 136 L348 238 Z" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+      <!-- Vitre arr -->
+      <path d="M470 238 L476 130 L580 140 L660 178 L662 238 Z" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.22)" stroke-width="0.8"/>
+      <!-- Vitre milieu -->
+      <path d="M358 238 L358 134 L465 130 L465 238 Z" fill="rgba(201,168,76,0.04)" stroke="rgba(201,168,76,0.15)" stroke-width="0.6"/>
+      <!-- Ligne de caisse -->
+      <path d="M82 262 L754 262" stroke="rgba(201,168,76,0.5)" stroke-width="2"/>
+      <!-- Ligne déco bas -->
+      <path d="M100 275 Q400 268 730 272" stroke="rgba(201,168,76,0.15)" stroke-width="1" stroke-dasharray="4,8"/>
+      <!-- Logo BRABUS style -->
+      <text x="390" y="255" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="11" fill="rgba(201,168,76,0.6)" letter-spacing="6">BRABUS</text>
+      <!-- Roue AV -->
+      <circle cx="206" cy="296" r="48" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="2"/>
+      <circle cx="206" cy="296" r="34" fill="#080808" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <circle cx="206" cy="296" r="11" fill="#161616" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"/>
+      <line x1="206" y1="262" x2="206" y2="330" stroke="rgba(201,168,76,0.35)" stroke-width="2"/>
+      <line x1="172" y1="296" x2="240" y2="296" stroke="rgba(201,168,76,0.35)" stroke-width="2"/>
+      <line x1="182" y1="272" x2="230" y2="320" stroke="rgba(201,168,76,0.2)" stroke-width="1.5"/>
+      <line x1="230" y1="272" x2="182" y2="320" stroke="rgba(201,168,76,0.2)" stroke-width="1.5"/>
+      <!-- Roue ARR -->
+      <circle cx="596" cy="296" r="48" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="2"/>
+      <circle cx="596" cy="296" r="34" fill="#080808" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+      <circle cx="596" cy="296" r="11" fill="#161616" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"/>
+      <line x1="596" y1="262" x2="596" y2="330" stroke="rgba(201,168,76,0.35)" stroke-width="2"/>
+      <line x1="562" y1="296" x2="630" y2="296" stroke="rgba(201,168,76,0.35)" stroke-width="2"/>
+      <line x1="572" y1="272" x2="620" y2="320" stroke="rgba(201,168,76,0.2)" stroke-width="1.5"/>
+      <line x1="620" y1="272" x2="572" y2="320" stroke="rgba(201,168,76,0.2)" stroke-width="1.5"/>
+      <!-- Phare AV -->
+      <path d="M86 240 L115 212 L130 228 L100 254 Z" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+      <ellipse cx="100" cy="238" rx="7" ry="5" fill="rgba(201,168,76,0.5)"/>
+      <!-- Phare ARR -->
+      <path d="M724 240 L748 248 L746 268 L720 262 Z" fill="rgba(230,61,47,0.15)" stroke="rgba(230,61,47,0.5)" stroke-width="1"/>
+      <!-- Toit ouvrant -->
+      <path d="M220 170 L460 162 L460 195 L220 202 Z" fill="rgba(201,168,76,0.03)" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+      <!-- Reflet carrosserie -->
+      <path d="M100 262 Q300 250 700 256 L700 264 Q300 260 100 270 Z" fill="rgba(255,255,255,0.025)"/>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-pill"><span class="pill-dot"></span> Disponible maintenant · Marrakech</div>
+    <h1>ROUL<span class="gold">EZ</span><br>VOS<br>RÊVES</h1>
+    <p class="hero-desc">De la Clio 4 au Brabus, en passant par des motos de légende — la flotte Dream Location vous attend à Marrakech. 20 véhicules, tous budgets, 7j/7.</p>
+    <div class="hero-actions">
+      <button class="btn-main" onclick="document.getElementById('flotte').scrollIntoView({behavior:'smooth'})">Voir la flotte</button>
+      <a href="https://snapchat.com/add/numero.onee" target="_blank" class="btn-snap">👻 Réserver sur Snap</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div><div class="st-num">20</div><div class="st-lab">Véhicules</div></div>
+    <div><div class="st-num">7/7</div><div class="st-lab">Disponible</div></div>
+    <div><div class="st-num">∞</div><div class="st-lab">Budgets</div></div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ═══════════ FILTRES ═══════════ -->
+<div class="filter-section">
+  <div class="filter-wrap">
+    <button class="f-tab active" onclick="filterVehicles('all',this)">Tous (20)</button>
+    <button class="f-tab" onclick="filterVehicles('voiture',this)">🚗 Voitures</button>
+    <button class="f-tab" onclick="filterVehicles('sport',this)">🏎️ Sport & GT</button>
+    <button class="f-tab" onclick="filterVehicles('suv',this)">🚙 SUV & 4x4</button>
+    <button class="f-tab" onclick="filterVehicles('moto',this)">🏍️ Motos</button>
+    <button class="f-tab" onclick="filterVehicles('budget',this)">💚 Petits budgets</button>
+    <button class="f-tab" onclick="filterVehicles('luxe',this)">💎 Luxe</button>
+  </div>
+</div>
+
+<!-- ═══════════ FLOTTE ═══════════ -->
+<section id="flotte">
+  <div class="section-head reveal">
+    <div class="s-tag">Flotte 2024–2025</div>
+    <h2>20 VÉHICULES<br><span class="gold">TOUS BUDGETS</span></h2>
+  </div>
+
+  <div class="vehicles-grid" id="vehiclesGrid">
+
+    <!-- 1. BRABUS — BIG FEATURED -->
+    <div class="v-card big reveal" data-cat="sport luxe">
+      <div class="v-badge badge-hot">🔥 Top</div>
+      <div class="v-img">
+        <svg viewBox="0 0 380 180" fill="none">
+          <ellipse cx="190" cy="168" rx="155" ry="8" fill="rgba(0,0,0,0.6)"/>
+          <path d="M28 138 L38 102 L88 68 L148 52 L200 48 L265 52 L320 72 L355 105 L360 138 Z" fill="#141414" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <path d="M70 112 L90 68 L160 52 L230 50 L290 60 L330 86 L332 112 Z" fill="#0f0f0f"/>
+          <path d="M95 110 L105 70 L170 54 L185 110 Z" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
+          <path d="M195 110 L198 50 L285 60 L326 86 L326 110 Z" fill="rgba(201,168,76,0.05)"/>
+          <path d="M28 126 L358 126" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+          <text x="190" y="120" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="8" fill="rgba(201,168,76,0.5)" letter-spacing="4">BRABUS</text>
+          <circle cx="96" cy="148" r="24" fill="#0d0d0d" stroke="rgba(201,168,76,0.45)" stroke-width="1.5"/>
+          <circle cx="96" cy="148" r="15" fill="#080808"/>
+          <circle cx="96" cy="148" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"/>
+          <line x1="96" y1="133" x2="96" y2="163" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+          <line x1="81" y1="148" x2="111" y2="148" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+          <circle cx="290" cy="148" r="24" fill="#0d0d0d" stroke="rgba(201,168,76,0.45)" stroke-width="1.5"/>
+          <circle cx="290" cy="148" r="15" fill="#080808"/>
+          <circle cx="290" cy="148" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"/>
+          <line x1="290" y1="133" x2="290" y2="163" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+          <line x1="275" y1="148" x2="305" y2="148" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+          <path d="M28 112 L56 100 L44 96 Z" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.5)" stroke-width="0.8"/>
+          <ellipse cx="40" cy="105" rx="5" ry="3" fill="rgba(201,168,76,0.5)"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Hyper Berline · Allemagne</div>
+        <div class="v-name">Brabus 900</div>
+        <div class="v-model">Mercedes S63 Tuned — 2024</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>900 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>0–100 en 3.2s</div>
+          <div class="v-spec"><div class="sp-dot"></div>350+ km/h</div>
+          <div class="v-spec"><div class="sp-dot"></div>Automatique</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">2 500<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. PORSCHE 911 -->
+    <div class="v-card reveal" data-cat="sport luxe">
+      <div class="v-badge badge-new">NEW</div>
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="118" ry="7" fill="rgba(0,0,0,0.5)"/>
+          <path d="M22 118 L32 88 L75 58 L120 44 L165 42 L215 46 L258 66 L278 96 L280 118 Z" fill="#181818" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+          <path d="M55 92 L72 55 L135 43 L190 42 L240 54 L265 80 L265 92 Z" fill="#121212"/>
+          <path d="M22 108 L278 108" stroke="rgba(201,168,76,0.45)" stroke-width="1.2"/>
+          <circle cx="74" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="74" cy="124" r="13" fill="#080808"/>
+          <circle cx="74" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="226" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="226" cy="124" r="13" fill="#080808"/>
+          <circle cx="226" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Sport GT · Allemagne</div>
+        <div class="v-name">Porsche 911</div>
+        <div class="v-model">Carrera 4S — 2024</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>450 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>3.6s</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">1 800<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. RANGE ROVER -->
+    <div class="v-card reveal" data-cat="suv luxe">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="115" ry="7" fill="rgba(0,0,0,0.5)"/>
+          <path d="M20 115 L28 78 L75 48 L140 36 L200 35 L255 42 L278 70 L282 100 L280 115 Z" fill="#1a1a1a" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <path d="M48 88 L68 50 L138 36 L202 36 L252 46 L272 74 L272 88 Z" fill="#131313"/>
+          <path d="M20 100 L280 100" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <circle cx="72" cy="122" r="21" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="72" cy="122" r="14" fill="#080808"/>
+          <circle cx="72" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="228" cy="122" r="21" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="228" cy="122" r="14" fill="#080808"/>
+          <circle cx="228" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">SUV Premium · Angleterre</div>
+        <div class="v-name">Range Rover</div>
+        <div class="v-model">Autobiography — 2024</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>530 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>5 places</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">1 600<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. MERCEDES G63 -->
+    <div class="v-card reveal" data-cat="suv luxe">
+      <div class="v-badge badge-hot">🔥</div>
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="112" ry="7" fill="rgba(0,0,0,0.5)"/>
+          <path d="M28 115 L28 58 L62 42 L238 42 L272 58 L272 115 Z" fill="#181818" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+          <path d="M42 88 L42 48 L258 48 L258 88 Z" fill="#101010"/>
+          <rect x="55" y="52" width="86" height="32" rx="1" fill="rgba(201,168,76,0.06)" stroke="rgba(201,168,76,0.25)" stroke-width="0.8"/>
+          <rect x="158" y="52" width="86" height="32" rx="1" fill="rgba(201,168,76,0.04)" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+          <path d="M28 100 L272 100" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <circle cx="74" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="74" cy="122" r="13" fill="#080808"/>
+          <circle cx="74" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="226" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="226" cy="122" r="13" fill="#080808"/>
+          <circle cx="226" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <text x="150" y="78" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="9" fill="rgba(201,168,76,0.4)" letter-spacing="4">G 63 AMG</text>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">SUV Iconic · Allemagne</div>
+        <div class="v-name">Mercedes G63</div>
+        <div class="v-model">AMG Edition — 2023</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>585 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>4.5s</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">2 000<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. BMW M4 -->
+    <div class="v-card reveal" data-cat="sport luxe">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="116" ry="7" fill="rgba(0,0,0,0.5)"/>
+          <path d="M20 118 L30 84 L80 54 L145 40 L195 38 L252 44 L278 74 L280 118 Z" fill="#161616" stroke="rgba(201,168,76,0.32)" stroke-width="1"/>
+          <path d="M58 94 L76 58 L148 40 L204 38 L258 52 L270 82 L270 94 Z" fill="#101010"/>
+          <path d="M20 106 L280 106" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <circle cx="76" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="76" cy="124" r="13" fill="#080808"/>
+          <circle cx="76" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="224" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="224" cy="124" r="13" fill="#080808"/>
+          <circle cx="224" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Sport · Allemagne</div>
+        <div class="v-name">BMW M4</div>
+        <div class="v-model">Competition xDrive — 2024</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>510 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>3.5s</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">1 400<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. AUDI RS6 -->
+    <div class="v-card reveal" data-cat="sport luxe">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="114" ry="7" fill="rgba(0,0,0,0.5)"/>
+          <path d="M22 115 L30 82 L76 56 L142 42 L192 40 L250 46 L276 74 L278 115 Z" fill="#171717" stroke="rgba(201,168,76,0.32)" stroke-width="1"/>
+          <path d="M55 92 L74 58 L144 42 L198 40 L254 52 L268 82 L268 92 Z" fill="#0f0f0f"/>
+          <path d="M22 104 L278 104" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <circle cx="74" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="74" cy="122" r="13" fill="#080808"/>
+          <circle cx="74" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="224" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="224" cy="122" r="13" fill="#080808"/>
+          <circle cx="224" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Break GT · Allemagne</div>
+        <div class="v-name">Audi RS6</div>
+        <div class="v-model">Avant Performance — 2023</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>630 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>3.4s</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">1 300<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. LAMBORGHINI URUS — BIG -->
+    <div class="v-card big reveal" data-cat="suv luxe sport">
+      <div class="v-badge badge-hot">🔥 Exclusif</div>
+      <div class="v-img">
+        <svg viewBox="0 0 380 180" fill="none">
+          <ellipse cx="190" cy="168" rx="152" ry="8" fill="rgba(0,0,0,0.6)"/>
+          <path d="M30 140 L48 100 L95 65 L158 48 L220 44 L285 48 L338 72 L360 108 L362 140 Z" fill="#131313" stroke="rgba(201,168,76,0.45)" stroke-width="1.2"/>
+          <path d="M68 112 L90 68 L162 48 L224 46 L288 56 L330 82 L330 112 Z" fill="#0a0a0a"/>
+          <path d="M105 110 L118 68 L190 50 L206 110 Z" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
+          <path d="M215 110 L218 46 L285 56 L326 82 L326 110 Z" fill="rgba(201,168,76,0.05)"/>
+          <path d="M30 128 L360 128" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+          <text x="190" y="120" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="9" fill="rgba(201,168,76,0.55)" letter-spacing="5">URUS PERFORMANTE</text>
+          <circle cx="100" cy="150" r="24" fill="#0d0d0d" stroke="rgba(201,168,76,0.45)" stroke-width="2"/>
+          <circle cx="100" cy="150" r="16" fill="#080808"/>
+          <circle cx="100" cy="150" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"/>
+          <line x1="100" y1="134" x2="100" y2="166" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+          <line x1="84" y1="150" x2="116" y2="150" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+          <circle cx="284" cy="150" r="24" fill="#0d0d0d" stroke="rgba(201,168,76,0.45)" stroke-width="2"/>
+          <circle cx="284" cy="150" r="16" fill="#080808"/>
+          <circle cx="284" cy="150" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.6)" stroke-width="1.5"/>
+          <line x1="284" y1="134" x2="284" y2="166" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+          <line x1="268" y1="150" x2="300" y2="150" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Super SUV · Italie</div>
+        <div class="v-name">Lamborghini Urus</div>
+        <div class="v-model">Performante — 2024</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>666 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>0–100 en 3.3s</div>
+          <div class="v-spec"><div class="sp-dot"></div>305 km/h max</div>
+          <div class="v-spec"><div class="sp-dot"></div>5 places</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">2 800<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. DUCATI PANIGALE -->
+    <div class="v-card reveal" data-cat="moto sport">
+      <div class="v-badge badge-moto">🏍️ Moto</div>
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <!-- Corps moto Ducati -->
+          <ellipse cx="148" cy="135" rx="100" ry="7" fill="rgba(0,0,0,0.5)"/>
+          <!-- Roue arrière -->
+          <circle cx="215" cy="118" r="30" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="215" cy="118" r="20" fill="#080808" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <circle cx="215" cy="118" r="7" fill="#141414" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <!-- Roue avant -->
+          <circle cx="82" cy="118" r="28" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="82" cy="118" r="18" fill="#080808" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <circle cx="82" cy="118" r="6" fill="#141414" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <!-- Cadre -->
+          <path d="M82 92 L110 72 L175 68 L215 80 L215 95 L160 100 L110 98 Z" fill="#1a1a1a" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <!-- Carénage -->
+          <path d="M80 105 L110 72 L142 60 L175 58 L200 68 L215 82 L200 95 L130 98 Z" fill="#e63d2f" opacity="0.8" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+          <!-- Selle -->
+          <path d="M145 68 L200 70 L215 80 L200 76 L145 74 Z" fill="#1a1a1a" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+          <!-- Guidon -->
+          <path d="M88 90 L100 82 L114 84" stroke="rgba(201,168,76,0.5)" stroke-width="2" stroke-linecap="round"/>
+          <!-- Pot d'échappement -->
+          <path d="M200 100 L225 95 L230 100 L205 106 Z" fill="rgba(201,168,76,0.2)" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+          <text x="148" y="50" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="9" fill="rgba(201,168,76,0.6)" letter-spacing="3">DUCATI</text>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Superbike · Italie</div>
+        <div class="v-name">Ducati Panigale</div>
+        <div class="v-model">V4 S — 2024</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>214 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>299 km/h</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">900<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. HARLEY DAVIDSON -->
+    <div class="v-card reveal" data-cat="moto">
+      <div class="v-badge badge-moto">🏍️ Moto</div>
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="148" cy="135" rx="100" ry="7" fill="rgba(0,0,0,0.5)"/>
+          <circle cx="82" cy="112" r="32" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="82" cy="112" r="21" fill="#080808" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <circle cx="82" cy="112" r="7" fill="#141414" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="220" cy="112" r="30" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="220" cy="112" r="19" fill="#080808" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <circle cx="220" cy="112" r="7" fill="#141414" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <!-- Cadre chopper -->
+          <path d="M82 85 L120 64 L190 60 L220 76 L220 90 L170 95 L100 90 Z" fill="#141414" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <path d="M82 85 L82 90 L100 92 L175 90 L220 80 L215 72 L175 65 L120 66 Z" fill="#1a1a1a"/>
+          <!-- Guidon haut style Harley -->
+          <path d="M92 80 L105 60 L125 58" stroke="rgba(201,168,76,0.4)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M92 80 L78 68 L64 70" stroke="rgba(201,168,76,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Moteur -->
+          <rect x="128" y="80" width="44" height="28" rx="3" fill="#141414" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <line x1="140" y1="80" x2="140" y2="108" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+          <line x1="155" y1="80" x2="155" y2="108" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+          <text x="148" y="44" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="8" fill="rgba(201,168,76,0.6)" letter-spacing="2">HARLEY-DAVIDSON</text>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Cruiser · USA</div>
+        <div class="v-name">Harley-Davidson</div>
+        <div class="v-model">Fat Boy 114 — 2023</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>95 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>1868cc</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">700<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. TOYOTA LAND CRUISER -->
+    <div class="v-card reveal" data-cat="suv voiture">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="112" ry="7" fill="rgba(0,0,0,0.5)"/>
+          <path d="M30 114 L30 56 L64 40 L236 40 L270 56 L270 114 Z" fill="#1a1a1a" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <path d="M44 86 L44 46 L256 46 L256 86 Z" fill="#111"/>
+          <rect x="56" y="50" width="85" height="32" rx="1" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+          <rect x="158" y="50" width="84" height="32" rx="1" fill="rgba(201,168,76,0.04)" stroke="rgba(201,168,76,0.15)" stroke-width="0.8"/>
+          <path d="M30 100 L270 100" stroke="rgba(201,168,76,0.38)" stroke-width="1.2"/>
+          <circle cx="74" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.38)" stroke-width="1.5"/>
+          <circle cx="74" cy="122" r="13" fill="#080808"/>
+          <circle cx="74" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="226" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.38)" stroke-width="1.5"/>
+          <circle cx="226" cy="122" r="13" fill="#080808"/>
+          <circle cx="226" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">SUV Tout-terrain · Japon</div>
+        <div class="v-name">Toyota Land Cruiser</div>
+        <div class="v-model">VX300 — 2023</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>309 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>7 places</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">800<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. MINI COOPER S -->
+    <div class="v-card reveal" data-cat="voiture budget">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="106" ry="6" fill="rgba(0,0,0,0.5)"/>
+          <path d="M44 118 L52 86 L90 60 L148 50 L200 50 L240 62 L258 88 L258 118 Z" fill="#1c1c1c" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <path d="M72 96 L88 64 L150 52 L200 52 L238 64 L244 94 Z" fill="#141414"/>
+          <circle cx="88" cy="124" r="19" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="88" cy="124" r="12" fill="#080808"/>
+          <circle cx="88" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="212" cy="124" r="19" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="212" cy="124" r="12" fill="#080808"/>
+          <circle cx="212" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Compacte · Angleterre</div>
+        <div class="v-name">Mini Cooper S</div>
+        <div class="v-model">JCW Edition — 2022</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>231 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>Boîte auto</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">400<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. YAMAHA R1 -->
+    <div class="v-card reveal" data-cat="moto sport">
+      <div class="v-badge badge-moto">🏍️ Moto</div>
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="148" cy="135" rx="98" ry="6" fill="rgba(0,0,0,0.5)"/>
+          <circle cx="84" cy="114" r="28" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="84" cy="114" r="18" fill="#080808"/>
+          <circle cx="84" cy="114" r="6" fill="#141414" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="214" cy="114" r="26" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="214" cy="114" r="16" fill="#080808"/>
+          <circle cx="214" cy="114" r="6" fill="#141414" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <path d="M84 88 L115 66 L175 60 L214 74 L214 90 L160 96 L105 92 Z" fill="#0f2a4a" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+          <path d="M84 86 L110 66 L142 56 L178 56 L204 68 L212 80 L200 88 L125 90 Z" fill="#1a3a6a" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+          <path d="M92 82 L108 70 L92 90 Z" fill="rgba(201,168,76,0.2)" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+          <text x="148" y="48" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="9" fill="rgba(201,168,76,0.6)" letter-spacing="3">YAMAHA R1</text>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Superbike · Japon</div>
+        <div class="v-name">Yamaha R1</div>
+        <div class="v-model">M — 2023</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>200 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>299 km/h</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">750<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. RENAULT CLIO 4 -->
+    <div class="v-card reveal" data-cat="voiture budget">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="108" ry="6" fill="rgba(0,0,0,0.5)"/>
+          <path d="M40 118 L50 88 L92 64 L145 54 L192 54 L238 64 L262 90 L264 118 Z" fill="#1a1a1a" stroke="rgba(201,168,76,0.28)" stroke-width="1"/>
+          <path d="M68 96 L86 66 L148 56 L195 56 L234 66 L242 96 Z" fill="#111"/>
+          <path d="M68 96 L40 118" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <path d="M40 108 L264 108" stroke="rgba(201,168,76,0.35)" stroke-width="1.2"/>
+          <circle cx="82" cy="124" r="18" fill="#0d0d0d" stroke="rgba(201,168,76,0.38)" stroke-width="1.5"/>
+          <circle cx="82" cy="124" r="11" fill="#080808"/>
+          <circle cx="82" cy="124" r="4" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="218" cy="124" r="18" fill="#0d0d0d" stroke="rgba(201,168,76,0.38)" stroke-width="1.5"/>
+          <circle cx="218" cy="124" r="11" fill="#080808"/>
+          <circle cx="218" cy="124" r="4" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Citadine · France</div>
+        <div class="v-name">Renault Clio 4</div>
+        <div class="v-model">Intense — 2021</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>90 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>Clim.</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">180<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14. DACIA DUSTER -->
+    <div class="v-card reveal" data-cat="suv budget voiture">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="110" ry="6" fill="rgba(0,0,0,0.5)"/>
+          <path d="M32 114 L32 66 L62 48 L238 48 L268 66 L268 114 Z" fill="#191919" stroke="rgba(201,168,76,0.28)" stroke-width="1"/>
+          <path d="M46 86 L46 54 L254 54 L254 86 Z" fill="#101010"/>
+          <rect x="58" y="58" width="82" height="26" rx="1" fill="rgba(201,168,76,0.04)" stroke="rgba(201,168,76,0.18)" stroke-width="0.8"/>
+          <rect x="160" y="58" width="80" height="26" rx="1" fill="rgba(201,168,76,0.03)" stroke="rgba(201,168,76,0.14)" stroke-width="0.8"/>
+          <path d="M32 100 L268 100" stroke="rgba(201,168,76,0.36)" stroke-width="1.2"/>
+          <circle cx="72" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.38)" stroke-width="1.5"/>
+          <circle cx="72" cy="122" r="13" fill="#080808"/>
+          <circle cx="72" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <circle cx="228" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.38)" stroke-width="1.5"/>
+          <circle cx="228" cy="122" r="13" fill="#080808"/>
+          <circle cx="228" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">SUV Accessible · Roumanie</div>
+        <div class="v-name">Dacia Duster</div>
+        <div class="v-model">4x4 — 2022</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>130 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>4x4</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">250<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15. MERCEDES C63 AMG -->
+    <div class="v-card reveal" data-cat="sport luxe voiture">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="112" ry="6" fill="rgba(0,0,0,0.5)"/>
+          <path d="M24 116 L34 84 L78 56 L144 44 L194 42 L250 48 L272 76 L274 116 Z" fill="#161616" stroke="rgba(201,168,76,0.32)" stroke-width="1"/>
+          <path d="M56 92 L76 58 L146 44 L196 42 L252 52 L266 82 L266 92 Z" fill="#0f0f0f"/>
+          <path d="M24 104 L274 104" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <circle cx="76" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="76" cy="124" r="13" fill="#080808"/>
+          <circle cx="76" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="222" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="222" cy="124" r="13" fill="#080808"/>
+          <circle cx="222" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <text x="150" y="98" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="8" fill="rgba(201,168,76,0.45)" letter-spacing="3">C63 AMG</text>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Sport · Allemagne</div>
+        <div class="v-name">Mercedes C63</div>
+        <div class="v-model">AMG S — 2023</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>680 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>3.4s</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">1 500<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 16. TESLA MODEL 3 -->
+    <div class="v-card reveal" data-cat="voiture budget luxe">
+      <div class="v-badge badge-new">⚡ Élec.</div>
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="112" ry="6" fill="rgba(0,0,0,0.5)"/>
+          <path d="M26 116 L36 82 L82 54 L148 42 L196 40 L252 46 L274 74 L276 116 Z" fill="#161616" stroke="rgba(201,168,76,0.32)" stroke-width="1"/>
+          <path d="M58 94 L78 56 L150 42 L198 40 L254 52 L268 84 L268 94 Z" fill="#101010"/>
+          <path d="M26 104 L276 104" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <circle cx="78" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="78" cy="124" r="13" fill="#080808"/>
+          <circle cx="78" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="220" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="220" cy="124" r="13" fill="#080808"/>
+          <circle cx="220" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <path d="M140 88 L160 88 L165 98 L135 98 Z" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.3)" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Électrique · USA</div>
+        <div class="v-name">Tesla Model 3</div>
+        <div class="v-model">Performance — 2024</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>460 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>3.3s</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">600<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 17. PEUGEOT 208 -->
+    <div class="v-card reveal" data-cat="voiture budget">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="108" ry="6" fill="rgba(0,0,0,0.5)"/>
+          <path d="M42 116 L50 86 L92 62 L146 52 L192 52 L238 62 L260 90 L262 116 Z" fill="#1a1a1a" stroke="rgba(201,168,76,0.28)" stroke-width="1"/>
+          <path d="M68 94 L86 64 L148 54 L195 54 L234 66 L240 94 Z" fill="#111"/>
+          <path d="M42 106 L262 106" stroke="rgba(201,168,76,0.34)" stroke-width="1.2"/>
+          <circle cx="82" cy="124" r="18" fill="#0d0d0d" stroke="rgba(201,168,76,0.36)" stroke-width="1.5"/>
+          <circle cx="82" cy="124" r="11" fill="#080808"/>
+          <circle cx="82" cy="124" r="4" fill="#1a1a1a" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <circle cx="218" cy="124" r="18" fill="#0d0d0d" stroke="rgba(201,168,76,0.36)" stroke-width="1.5"/>
+          <circle cx="218" cy="124" r="11" fill="#080808"/>
+          <circle cx="218" cy="124" r="4" fill="#1a1a1a" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Citadine · France</div>
+        <div class="v-name">Peugeot 208</div>
+        <div class="v-model">Allure — 2023</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>100 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>Clim.</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">170<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 18. JEEP WRANGLER -->
+    <div class="v-card reveal" data-cat="suv voiture">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="110" ry="6" fill="rgba(0,0,0,0.5)"/>
+          <path d="M34 114 L34 58 L62 42 L238 42 L266 58 L266 114 Z" fill="#1a1a1a" stroke="rgba(201,168,76,0.3)" stroke-width="1"/>
+          <path d="M46 85 L46 48 L254 48 L254 85 Z" fill="#111"/>
+          <rect x="58" y="53" width="80" height="28" rx="1" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.2)" stroke-width="0.8"/>
+          <rect x="162" y="53" width="78" height="28" rx="1" fill="rgba(201,168,76,0.04)" stroke="rgba(201,168,76,0.15)" stroke-width="0.8"/>
+          <!-- Grille avant style Jeep -->
+          <rect x="124" y="48" width="52" height="36" rx="0" fill="#141414" stroke="rgba(201,168,76,0.25)" stroke-width="0.8"/>
+          <line x1="130" y1="48" x2="130" y2="84" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <line x1="136" y1="48" x2="136" y2="84" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <line x1="142" y1="48" x2="142" y2="84" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <line x1="148" y1="48" x2="148" y2="84" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <line x1="154" y1="48" x2="154" y2="84" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <line x1="160" y1="48" x2="160" y2="84" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <line x1="166" y1="48" x2="166" y2="84" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <line x1="170" y1="48" x2="170" y2="84" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <path d="M34 100 L266 100" stroke="rgba(201,168,76,0.36)" stroke-width="1.2"/>
+          <circle cx="72" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="72" cy="122" r="13" fill="#080808"/>
+          <circle cx="72" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="228" cy="122" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="228" cy="122" r="13" fill="#080808"/>
+          <circle cx="228" cy="122" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">4x4 Iconique · USA</div>
+        <div class="v-name">Jeep Wrangler</div>
+        <div class="v-model">Rubicon 4xe — 2023</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>380 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>Hybride</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">650<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 19. KAWASAKI Z900 — BIG -->
+    <div class="v-card big reveal" data-cat="moto sport budget">
+      <div class="v-badge badge-moto">🏍️ Moto</div>
+      <div class="v-img">
+        <svg viewBox="0 0 380 180" fill="none">
+          <ellipse cx="190" cy="165" rx="138" ry="8" fill="rgba(0,0,0,0.5)"/>
+          <!-- Roue arrière -->
+          <circle cx="268" cy="138" rx="38" ry="38" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="268" cy="138" rx="25" ry="25" fill="#080808" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <circle cx="268" cy="138" rx="8" ry="8" fill="#141414" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <line x1="268" y1="113" x2="268" y2="163" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+          <line x1="243" y1="138" x2="293" y2="138" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+          <line x1="250" y1="120" x2="286" y2="156" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <line x1="286" y1="120" x2="250" y2="156" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <!-- Roue avant -->
+          <circle cx="110" cy="138" rx="36" ry="36" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="110" cy="138" rx="23" ry="23" fill="#080808" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <circle cx="110" cy="138" rx="7" ry="7" fill="#141414" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <line x1="110" y1="115" x2="110" y2="161" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+          <line x1="87" y1="138" x2="133" y2="138" stroke="rgba(201,168,76,0.3)" stroke-width="1.5"/>
+          <!-- Cadre et carrosserie Kawasaki -->
+          <path d="M110 108 L142 78 L210 64 L268 76 L280 100 L268 118 L180 122 L120 118 Z" fill="#1a2a0a" stroke="rgba(100,200,50,0.25)" stroke-width="1"/>
+          <path d="M110 106 L138 78 L185 62 L240 68 L268 84 L262 106 L190 110 L125 108 Z" fill="#2a3a1a"/>
+          <!-- Carénage vert Kawa -->
+          <path d="M108 108 L136 78 L166 60 L215 58 L255 72 L266 92 L258 108 L180 112 Z" fill="#1a4a00" stroke="rgba(100,200,50,0.3)" stroke-width="0.8"/>
+          <!-- Selle -->
+          <path d="M185 64 L258 72 L268 84 L254 76 L185 70 Z" fill="#141414" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+          <!-- Guidon -->
+          <path d="M116 100 L130 86 L148 88" stroke="rgba(201,168,76,0.5)" stroke-width="2" stroke-linecap="round"/>
+          <!-- Pot d'échappement -->
+          <path d="M255 112 L285 105 L290 112 L260 120 Z" fill="rgba(201,168,76,0.2)" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+          <!-- Phare -->
+          <path d="M108 106 L88 100 L84 108 L106 114 Z" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+          <ellipse cx="96" cy="107" rx="6" ry="5" fill="rgba(201,168,76,0.35)"/>
+          <text x="190" y="48" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(100,200,50,0.7)" letter-spacing="4">KAWASAKI Z900</text>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Naked Bike · Japon</div>
+        <div class="v-name">Kawasaki Z900</div>
+        <div class="v-model">Performance — 2023</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>125 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>248 km/h</div>
+          <div class="v-spec"><div class="sp-dot"></div>948cc</div>
+          <div class="v-spec"><div class="sp-dot"></div>Naked</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">550<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 20. FORD MUSTANG -->
+    <div class="v-card reveal" data-cat="sport voiture">
+      <div class="v-img">
+        <svg viewBox="0 0 300 150" fill="none">
+          <ellipse cx="150" cy="138" rx="112" ry="6" fill="rgba(0,0,0,0.5)"/>
+          <path d="M26 116 L38 86 L80 58 L148 46 L198 44 L252 50 L270 78 L272 116 Z" fill="#1c1010" stroke="rgba(201,168,76,0.35)" stroke-width="1"/>
+          <path d="M56 94 L76 60 L150 48 L198 46 L254 56 L264 86 L264 94 Z" fill="#120a0a"/>
+          <path d="M26 106 L272 106" stroke="rgba(201,168,76,0.4)" stroke-width="1.2"/>
+          <!-- Calandre mustang -->
+          <path d="M26 106 L42 96 L36 90 Z" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.4)" stroke-width="0.8"/>
+          <ellipse cx="34" cy="98" rx="6" ry="5" fill="rgba(201,168,76,0.4)"/>
+          <circle cx="78" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="78" cy="124" r="13" fill="#080808"/>
+          <circle cx="78" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <circle cx="222" cy="124" r="20" fill="#0d0d0d" stroke="rgba(201,168,76,0.4)" stroke-width="1.5"/>
+          <circle cx="222" cy="124" r="13" fill="#080808"/>
+          <circle cx="222" cy="124" r="5" fill="#1a1a1a" stroke="rgba(201,168,76,0.5)" stroke-width="1.2"/>
+          <text x="150" y="98" text-anchor="middle" font-family="Bebas Neue,sans-serif" font-size="8" fill="rgba(201,168,76,0.45)" letter-spacing="3">MUSTANG</text>
+        </svg>
+      </div>
+      <div class="v-body">
+        <div class="v-cat">Muscle Car · USA</div>
+        <div class="v-name">Ford Mustang GT</div>
+        <div class="v-model">Fastback V8 — 2024</div>
+        <div class="v-specs">
+          <div class="v-spec"><div class="sp-dot"></div>450 ch</div>
+          <div class="v-spec"><div class="sp-dot"></div>V8 5.0L</div>
+        </div>
+        <div class="v-foot">
+          <div class="v-price">850<sub>MAD/j</sub></div>
+          <button class="v-book" onclick="window.open('https://snapchat.com/add/numero.onee','_blank')">Réserver</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /vehiclesGrid -->
+</section>
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section id="contact">
+  <div class="contact-inner reveal">
+    <div class="s-tag" style="justify-content:center;">
+      <span style="width:0;display:none"></span>Contact & Réservation
+    </div>
+    <h2 style="text-align:center;font-size:clamp(40px,6vw,88px);">RÉSERVEZ<br><span class="gold">MAINTENANT</span></h2>
+    <p style="text-align:center;color:var(--texte);font-size:14px;line-height:1.8;max-width:460px;margin:14px auto 0;">
+      Pour toute réservation, disponibilité ou renseignement, contactez-nous directement sur Snapchat. Réponse rapide 7j/7, de Marrakech pour vous.
+    </p>
+
+    <div class="snap-card">
+      <div class="snap-logo">👻</div>
+      <div class="snap-handle">numero.onee</div>
+      <p class="snap-desc">Envoyez-nous un message sur Snapchat pour réserver votre véhicule, obtenir un tarif personnalisé ou poser toutes vos questions. On vous répond dans la minute. 📍 Marrakech, Maroc</p>
+      <a href="https://snapchat.com/add/numero.onee" target="_blank" class="snap-btn">
+        👻 Nous contacter sur Snapchat
+      </a>
+    </div>
+
+    <div class="contact-alts">
+      <div class="alt-contact"><span class="alt-icon">📍</span> Marrakech, Maroc</div>
+      <div class="alt-contact"><span class="alt-icon">🕐</span> Disponible 7j/7</div>
+      <div class="alt-contact"><span class="alt-icon">⚡</span> Réponse immédiate</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <div class="footer-row">
+    <div class="footer-logo">DREAM LOCATION</div>
+    <div class="footer-links">
+      <a href="#flotte">Flotte</a>
+      <a href="#contact">Contact</a>
+      <a href="https://snapchat.com/add/numero.onee" target="_blank">👻 Snap</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Dream Location · Marrakech, Maroc · Tous droits réservés</p>
+    <div class="marrakech-tag">📍 Marrakech · 7j/7</div>
+  </div>
+</footer>
+
+<script>
+/* ── CURSEUR ── */
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(loop);})();
+document.querySelectorAll('button,a,.v-card,.f-tab').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='14px';cur.style.height='14px';curR.style.width='50px';curR.style.height='50px';curR.style.borderColor='rgba(201,168,76,.9)';});
+  el.addEventListener('mouseleave',()=>{cur.style.width='6px';cur.style.height='6px';curR.style.width='32px';curR.style.height='32px';curR.style.borderColor='rgba(201,168,76,.5)';});
+});
+
+/* ── INTRO ANIMATION ── */
+let pct=0;
+const pctEl=document.getElementById('introPct');
+const pctInterval=setInterval(()=>{
+  pct+=Math.random()*8+4;
+  if(pct>=100){pct=100;clearInterval(pctInterval);}
+  pctEl.textContent=Math.round(pct)+'%';
+},60);
+
+// Créer des particules
+const intro=document.getElementById('intro');
+for(let i=0;i<20;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  const x=Math.random()*100,y=Math.random()*100;
+  p.style.left=x+'%';p.style.top=y+'%';
+  const tx=`translate(${(Math.random()-0.5)*300}px,${(Math.random()-0.5)*300}px)`;
+  p.style.setProperty('--tx',tx);
+  p.style.animationDelay=Math.random()*0.8+0.5+'s';
+  p.style.animationDuration=Math.random()*1+1.5+'s';
+  intro.appendChild(p);
+}
+
+// Ouvrir l'intro puis la masquer
+setTimeout(()=>{
+  intro.classList.add('open');
+},1800);
+setTimeout(()=>{
+  intro.style.transition='opacity .6s ease';
+  intro.style.opacity='0';
+  intro.style.pointerEvents='none';
+  setTimeout(()=>{intro.style.display='none';},600);
+},2800);
+
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60);
+});
+
+/* ── REVEAL ── */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting)setTimeout(()=>e.target.classList.add('visible'),i*50);
+  });
+},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+
+/* ── FILTRES ── */
+function filterVehicles(cat,btn){
+  document.querySelectorAll('.f-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.v-card').forEach(card=>{
+    const cats=card.dataset.cat||'';
+    const show=cat==='all'||cats.includes(cat);
+    card.style.display=show?'':'none';
+  });
+}
+</script>
+</body>
+</html>
